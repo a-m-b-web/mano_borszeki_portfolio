@@ -657,12 +657,25 @@
         }
 
         /* On hover: hide number, show shape */
-        .service-item:hover .service-number::before {
+        @media (hover: hover) {
+            .service-item:hover .service-number::before {
+                opacity: 0;
+                transform: scale(0.6);
+            }
+
+            .service-item:hover .service-number::after {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Touch screens: the block at mid-screen is switched on by script */
+        .service-item.is-active .service-number::before {
             opacity: 0;
             transform: scale(0.6);
         }
 
-        .service-item:hover .service-number::after {
+        .service-item.is-active .service-number::after {
             opacity: 1;
             transform: scale(1);
         }
@@ -1350,6 +1363,13 @@
                 transform: translateY(-8px) rotate(60deg);
             }
 
+            /* ---- Loader: extend past both screen edges so a collapsing
+               browser toolbar can never expose the page behind it ---- */
+            .loader-overlay {
+                top: -25vh;
+                height: 150vh;
+            }
+
             /* ---- Hero ---- */
             .hero {
                 padding: 0 1.5rem;
@@ -1629,7 +1649,7 @@
                along the bottom and let the project photo show above it */
             .carousel-overlay,
             .carousel-item.peek .carousel-overlay {
-                transform: translateY(72%);
+                transform: translateY(66.667%);
             }
 
             .carousel-item:hover .carousel-overlay,
@@ -1637,8 +1657,9 @@
                 transform: translateY(100%);
             }
 
+            /* centre the arrow in the visible third */
             .carousel-overlay .carousel-arrow {
-                top: 14px;
+                top: calc(16.667% - 8px);
             }
 
             /* The trailing envelope cursor needs a mouse */
@@ -1815,15 +1836,6 @@
                     <a href="javascript:void(0)" class="featured-link" data-project="ame-darienne" style="margin-top: 1rem; font-size: 0.9rem;">VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span></a>
                 </div>
             </div>
-
-            <div class="project-card">
-                <div class="project-image-container">
-                </div>
-                <div class="project-info">
-                    <div class="project-category">[pending]</div>
-                    <h3 class="project-title">[pending]</h3>
-                    <p class="project-description">[pending]</p>
-                </div>
             </div>
         </div>
     </section>
@@ -2011,7 +2023,8 @@
 
                 // Slide everything up
                 tl.to(overlay, {
-                    y: -window.innerHeight,
+                    // travel far enough to clear the screen even when the overlay is oversized
+                    y: -Math.max(window.innerHeight, overlay.getBoundingClientRect().bottom),
                     duration: 0.69,
                     ease: 'power3.in',
                     onComplete() {
@@ -3159,6 +3172,39 @@
                 if (!container.contains(e.target)) setOpen(false);
             });
             window.addEventListener('resize', function () { if (!isPhone()) setOpen(false); });
+        })();
+
+        /* ---------- Services: on touch, the block at mid-screen shows its shape ---------- */
+        (function () {
+            if (!window.matchMedia('(hover: none)').matches) return;
+            var items = Array.prototype.slice.call(document.querySelectorAll('#services .service-item'));
+            if (!items.length) return;
+            var ticking = false;
+
+            function update() {
+                ticking = false;
+                var mid = window.innerHeight / 2;
+                var best = null, bestDist = Infinity;
+                items.forEach(function (el) {
+                    var r = el.getBoundingClientRect();
+                    // only blocks that actually sit across the middle of the screen
+                    if (r.top - 12 > mid || r.bottom + 12 < mid) return;
+                    var d = Math.abs((r.top + r.bottom) / 2 - mid);
+                    if (d < bestDist) { bestDist = d; best = el; }
+                });
+                // one at a time: everything else returns to its number
+                items.forEach(function (el) { el.classList.toggle('is-active', el === best); });
+            }
+
+            function request() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(update);
+            }
+
+            window.addEventListener('scroll', request, { passive: true });
+            window.addEventListener('resize', request);
+            update();
         })();
 
     </script>
