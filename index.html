@@ -1270,6 +1270,387 @@
             height: 100%;
             object-fit: cover;
         }
+    
+        /* =====================================================
+           MOBILE  (phones and small tablets)
+           ===================================================== */
+        @media (max-width: 768px) {
+
+            /* ---- Top navigation: dropdown menu ---- */
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            nav .menu-container {
+                position: static;
+            }
+
+            nav .menu-button {
+                position: relative;
+            }
+
+            /* Larger tap target without changing how the icon looks */
+            nav .menu-button::after {
+                content: '';
+                position: absolute;
+                inset: -14px;
+            }
+
+            nav .menu-items {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                margin: 0;
+                padding: 0.25rem 1.5rem 0.75rem;
+                background: rgba(245, 245, 240, 0.97);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                transition: opacity 0.25s ease, transform 0.25s ease;
+            }
+
+            nav .menu-items a {
+                padding: 0.95rem 0;
+                font-size: 1rem;
+                text-align: right;
+                border-top: 1px solid rgba(0, 0, 0, 0.06);
+            }
+
+            nav .menu-items a:first-child {
+                border-top: none;
+            }
+
+            /* Open/closed is driven by a tap, not by hover */
+            nav .menu-container:not(.open) .menu-items {
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transform: translateY(-8px) !important;
+            }
+
+            nav .menu-container.open .menu-items {
+                opacity: 1;
+                pointer-events: auto;
+                transform: none;
+            }
+
+            nav .menu-container:not(.open) .menu-button {
+                transform: rotate(90deg) !important;
+            }
+
+            nav .menu-container:not(.open) .menu-button span {
+                transform: none !important;
+            }
+
+            nav .menu-container.open .menu-button span:nth-child(1) {
+                transform: translateY(8px) rotate(-60deg);
+            }
+
+            nav .menu-container.open .menu-button span:nth-child(3) {
+                transform: translateY(-8px) rotate(60deg);
+            }
+
+            /* ---- Hero ---- */
+            .hero {
+                padding: 0 1.5rem;
+            }
+
+            .hero-content {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.1rem, 11vw, 3rem);
+                margin-top: 9vh;
+                margin-bottom: 3.5rem;
+                gap: 0 0.8rem;
+                line-height: 1.15;
+            }
+
+            .hero-design {
+                font-size: clamp(1.9rem, 9.9vw, 2.7rem);
+            }
+
+            .hero-middle {
+                font-size: clamp(2.1rem, 11vw, 3rem);
+            }
+
+            .hero-anchor-nav {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+                margin: 1.5rem 0 2rem;
+            }
+
+            .hero-anchor-nav a {
+                font-size: 0.75rem;
+                padding: 0.95rem 0.5rem;
+            }
+
+            .hero-carousel {
+                margin-top: 2rem;
+                margin-bottom: 4rem;
+            }
+
+            .carousel-track {
+                gap: 1rem;
+            }
+
+            .carousel-item {
+                width: 220px;
+                height: 165px;
+            }
+
+            .hero-subtitle-main {
+                font-size: 1.1rem;
+                line-height: 1.5;
+                margin-top: 4rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero-subtitle-secondary {
+                font-size: 1rem;
+                line-height: 1.7;
+                margin-bottom: 3rem;
+            }
+
+            .hero-subtitle-first {
+                margin-bottom: 0.8rem;
+            }
+
+            /* ---- Sections ---- */
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .projects-grid {
+                gap: 2.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .featured-work {
+                margin: 4rem 0;
+            }
+
+            .featured-container {
+                gap: 1.25rem;
+                margin-bottom: 4rem;
+            }
+
+            .featured-text {
+                padding: 0 1.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+                margin-top: 2.5rem;
+            }
+
+            .contact-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .contact-title {
+                font-size: clamp(2rem, 9vw, 2.5rem);
+            }
+
+            .contact-email-wrapper {
+                gap: 1rem;
+            }
+
+            footer {
+                padding: 2rem 1.5rem;
+                gap: 1.25rem;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.75rem 1.5rem;
+            }
+
+            /* ---- Project overlay: top bar ---- */
+            .overlay-home-link-wrap {
+                left: 1.25rem;
+                top: calc(1rem + 3px);
+            }
+
+            .overlay-close {
+                right: 1.25rem;
+                top: 1rem;
+            }
+
+            .overlay-nav-links {
+                right: calc(1.25rem + 28px + 1.25rem);
+                top: calc(1rem + 3px);
+                gap: 1.25rem;
+            }
+
+            .overlay-home-link,
+            .overlay-nav-links a {
+                font-size: 0.8rem;
+            }
+
+            /* Backing strip so page text doesn't run underneath the links */
+            .project-overlay.active::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3.5rem;
+                background: rgba(255, 255, 255, 0.94);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                z-index: 10000;
+                pointer-events: none;
+                opacity: 0;
+                animation: overlayBarIn 0.6s ease 0.85s forwards;
+            }
+
+            .project-overlay.active.instant::after,
+            .project-overlay.closing::after {
+                animation: none;
+                opacity: 1;
+            }
+
+            /* ---- Project overlay: content ---- */
+            .overlay-inner {
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .overlay-header {
+                margin: 4.5rem 0 0.5rem;
+            }
+
+            .project-title-large {
+                font-size: clamp(2.1rem, 11vw, 3.5rem);
+                line-height: 1.05;
+                overflow-wrap: anywhere;
+            }
+
+            .project-subtitle {
+                font-size: clamp(1.15rem, 5.4vw, 1.6rem);
+                line-height: 1.4;
+            }
+
+            /* Show the whole splash instead of a full-screen centre crop */
+            .overlay-hero-image {
+                height: auto;
+            }
+
+            .overlay-hero-image img {
+                height: auto;
+            }
+
+            .overlay-body {
+                gap: 2.5rem;
+            }
+
+            .project-body-text {
+                margin-top: 0.5rem;
+            }
+
+            .project-body-text p {
+                font-size: 1.05rem;
+                line-height: 1.75;
+            }
+
+            .project-extra-images {
+                margin-top: 0;
+            }
+
+            .project-extra-images img {
+                margin-bottom: 1.5rem !important;
+            }
+
+            /* Scaled images keep roughly their desktop size, capped at full width */
+            .project-extra-images img.is-scaled {
+                width: min(100%, calc(var(--img-scale, 1) * 1072px)) !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            .project-image-stack {
+                margin-bottom: 1.5rem;
+            }
+
+            .project-image-row,
+            .project-image-stack .project-image-row {
+                gap: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .project-image-row img {
+                flex: none;
+                width: 100%;
+                margin-bottom: 0 !important;
+            }
+
+            .project-image-stack-bottom img {
+                width: 100% !important;
+                margin-bottom: 0 !important;
+            }
+
+            .project-image-caption {
+                margin: 2.5rem auto 1.5rem;
+                font-size: 1.05rem;
+                line-height: 1.75;
+            }
+
+            .project-image-caption--tight {
+                margin-top: 2rem;
+            }
+
+            .project-caption-link {
+                margin-top: 1.75rem;
+                font-size: 1.05rem;
+            }
+
+            .project-nav-grid-wrap {
+                margin: 1rem auto 1rem;
+            }
+        }
+
+        @keyframes overlayBarIn {
+            to { opacity: 1; }
+        }
+
+        /* =====================================================
+           TOUCH SCREENS  (no hover available)
+           ===================================================== */
+        @media (hover: none) {
+            /* The colour panel can't be hovered away, so rest it as a band
+               along the bottom and let the project photo show above it */
+            .carousel-overlay,
+            .carousel-item.peek .carousel-overlay {
+                transform: translateY(72%);
+            }
+
+            .carousel-item:hover .carousel-overlay,
+            .carousel-item.clicked .carousel-overlay {
+                transform: translateY(100%);
+            }
+
+            .carousel-overlay .carousel-arrow {
+                top: 14px;
+            }
+
+            /* The trailing envelope cursor needs a mouse */
+            .email-cursor {
+                display: none !important;
+            }
+
+            /* Don't leave tapped buttons stuck in their hover pose */
+            .hero-anchor-nav a:hover {
+                transform: none;
+            }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
@@ -1595,7 +1976,7 @@
                 const goText   = document.getElementById('loaderGo');
 
                 // Calculate font size so "GO!" fills the screen minus 80px padding each side
-                const targetWidth = window.innerWidth - 160;
+                const targetWidth = window.innerWidth - (window.innerWidth <= 768 ? 64 : 160);
                 goText.style.fontSize = '10px';
                 goText.style.opacity  = '1';
                 goText.style.transform = 'translate(-50%, -50%) scale(1)';
@@ -2310,6 +2691,8 @@
                             if (item.scale && item.scale !== 1) {
                                 img.style.width = (item.scale * 100) + '%';
                                 img.style.maxWidth = 'none';
+                                img.classList.add('is-scaled');
+                                img.style.setProperty('--img-scale', item.scale);
                                 img.style.display = 'block';
                                 if (item.align === 'left') {
                                     img.style.margin = '0 auto ' + gap + ' 0';
@@ -2699,7 +3082,12 @@
                 '.featured-image-box[data-project], .project-image-container[data-project]'
             );
 
+            // Touch screens have no hover: a tap would start the cycle and
+            // nothing would ever stop it, so leave thumbnails static there
+            var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
             boxes.forEach(function (box) {
+                if (!canHover) return;
                 var img = box.querySelector('img');
                 if (!img) return;
 
@@ -2744,6 +3132,33 @@
                 box.addEventListener('mouseenter', start);
                 box.addEventListener('mouseleave', stop);
             });
+        })();
+
+        /* ---------- Mobile menu: tap to open / close ---------- */
+        (function () {
+            var container = document.querySelector('nav .menu-container');
+            if (!container) return;
+            var button = container.querySelector('.menu-button');
+            var isPhone = function () { return window.matchMedia('(max-width: 768px)').matches; };
+
+            button.setAttribute('aria-expanded', 'false');
+            function setOpen(open) {
+                container.classList.toggle('open', open);
+                button.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+
+            button.addEventListener('click', function (e) {
+                if (!isPhone()) return;          // desktop keeps its hover menu
+                e.stopPropagation();
+                setOpen(!container.classList.contains('open'));
+            });
+            container.querySelectorAll('.menu-items a').forEach(function (a) {
+                a.addEventListener('click', function () { setOpen(false); });
+            });
+            document.addEventListener('click', function (e) {
+                if (!container.contains(e.target)) setOpen(false);
+            });
+            window.addEventListener('resize', function () { if (!isPhone()) setOpen(false); });
         })();
 
     </script>
