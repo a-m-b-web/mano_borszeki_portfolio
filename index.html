@@ -1,0 +1,3212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@200;300;400;500;600;700;900&family=Quicksand:wght@300;700&family=Funnel+Display:wght@300;400;500;700&family=Poiret+One&display=swap" rel="stylesheet">
+    <title>Portfolio — Mano Borszeki</title>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Loading Animation */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .loader-spinner {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .loader-svg {
+            width: 80px;
+            height: 80px;
+            transform: rotate(-90deg);
+        }
+
+        .loader-track {
+            fill: none;
+            stroke: rgba(20, 20, 20, 0.12);
+            stroke-width: 3;
+        }
+
+        .loader-progress {
+            fill: none;
+            stroke: #1a1a1a;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 226.2;
+            stroke-dashoffset: 226.2;
+        }
+
+        .loader-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            color: #1a1a1a;
+        }
+
+        .loader-go {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 10001;
+            font-family: 'Archivo Black', 'Funnel Display', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: #1a1a1a;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Block interaction while loader is visible */
+        body.loading::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: all;
+            z-index: 9999;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(245, 245, 240, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .hero-anchor-nav {
+            position: static;
+            background: none;
+            backdrop-filter: none;
+            border-bottom: none;
+            padding: 0;
+            width: auto;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .logo-first {
+            font-weight: 900;
+        }
+
+        .logo-last {
+            font-weight: 200;
+        }
+
+        .menu-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 28px;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 2rem;
+            margin-right: 2rem;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .menu-container:hover .menu-items {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .menu-items a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-family: 'Poiret One', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            white-space: nowrap;
+            transition: opacity 0.3s;
+            text-transform: uppercase;
+        }
+
+        .menu-items a:hover {
+            opacity: 0.6;
+        }
+
+        .menu-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 28px;
+            transform: rotate(90deg);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-container:hover .menu-button {
+            transform: rotate(90deg) scale(0.9);
+        }
+
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #1a1a1a;
+            transition: all 0.4s ease;
+            transform-origin: center;
+        }
+
+        .menu-container:hover .menu-button span:nth-child(1) {
+            transform: translateY(8px) rotate(-60deg);
+        }
+
+        .menu-container:hover .menu-button span:nth-child(2) {
+            transform: rotate(0deg);
+        }
+
+        .menu-container:hover .menu-button span:nth-child(3) {
+            transform: translateY(-8px) rotate(60deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            position: relative;
+            padding: 0 4rem;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-top: 15vh;
+            margin-bottom: 10rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-design {
+            font-family: 'Poiret One', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 0.05em;
+            font-size: clamp(2.7rem, 7.16vw, 6.31rem);
+        }
+
+        .hero-middle {
+            font-family: 'Funnel Display', sans-serif;
+            font-weight: 700;
+            font-size: clamp(3rem, 8vw, 7rem);
+            letter-spacing: 0.05em;
+        }
+
+        .hero-subtitle-main {
+            font-size: clamp(1.38rem, 2.07vw, 1.84rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            margin-bottom: 3rem;
+            margin-top: 12rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle-secondary {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #1a1a1a;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+            font-weight: 500;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle-first {
+            margin-bottom: 0.8rem;
+        }
+
+        /* Hero Anchor Navigation */
+        .hero-anchor-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0 3rem 0;
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-anchor-nav a {
+            flex: 1 1 auto;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.4);
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease, flex-grow 0.3s ease;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.08);
+            padding: 0.8rem 1.5rem;
+            text-align: center;
+            border-radius: 0;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            position: relative;        }
+
+        .hero-anchor-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .hero-anchor-nav a:hover {
+            color: #ffffff;
+            transform: translateY(-4px);
+            background-color: #1a1a1a;
+            text-shadow: none;
+            flex-grow: 2.5;
+        }
+
+        .hero-carousel {
+            width: 100vw;
+            max-width: 100vw;
+            overflow: hidden;
+            margin: 3rem auto 10rem auto;
+            position: relative;
+            margin-left: calc(-50vw + 50%);
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 2rem;
+            width: fit-content;
+            will-change: transform;
+        }
+
+        .carousel-item {
+            flex-shrink: 0;
+            width: 280px;
+            height: 210px;
+            background-color: #f0f0f0;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Project photo fills the card */
+        .carousel-item img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Pastel colour overlay sits on top, slides away on hover */
+        .carousel-overlay {
+            position: absolute;
+            inset: 0;
+            transform: translateY(0);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0;
+            z-index: 1;
+        }
+
+        .carousel-item:hover .carousel-overlay {
+            transform: translateY(100%);
+        }
+
+        .carousel-item.clicked .carousel-overlay {
+            transform: translateY(100%);
+        }
+
+        .carousel-item.peek .carousel-overlay {
+            transform: translateY(33%);
+        }
+
+        /* Small opaque down arrow at the top middle of the coloured overlay,
+           moves with it as it slides down */
+        .carousel-overlay .carousel-arrow {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            color: #333333;
+            opacity: 0.85;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+
+        /* Section Spacing */
+        section {
+            padding: 8rem 4rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Editorial Section Header */
+        .section-header {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        /* Project Grid - DixonBaxi Style */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            margin-bottom: 8rem;
+        }
+
+        .project-card {
+            position: relative;
+            cursor: default;
+            transition: all 0.4s ease;
+        }
+
+        /* Varying grid layouts for visual interest */
+        .project-card:nth-child(1) {
+            grid-column: span 7;
+        }
+
+        .project-card:nth-child(2) {
+            grid-column: span 5;
+        }
+
+        .project-card:nth-child(3) {
+            grid-column: span 5;
+        }
+
+        .project-card:nth-child(4) {
+            grid-column: span 7;
+        }
+
+        .project-card:nth-child(5) {
+            grid-column: span 6;
+        }
+
+        .project-card:nth-child(6) {
+            grid-column: span 6;
+        }
+
+        .project-image-container {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-info {
+            padding: 1.5rem 0;
+        }
+
+        .project-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-description {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        /* Featured Work - Full Bleed with White Space */
+        .featured-work {
+            margin: 10rem 0;
+        }
+
+        .featured-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            margin-bottom: 8rem;
+        }
+
+        .featured-container:nth-child(even) {
+            direction: rtl;
+        }
+
+        .featured-container:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .featured-image-box {
+            width: 100%;
+            aspect-ratio: 16/11;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Hover flash-through: white backing for transparent images */
+        .flash-ready:hover img {
+            background-color: #ffffff;
+        }
+
+        .featured-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-text {
+            padding: 2rem;
+        }
+
+        .featured-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .featured-title {
+            font-size: clamp(2rem, 3vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .featured-description {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .featured-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 700;
+            transition: gap 0.3s;
+        }
+
+        .featured-link:hover {
+            gap: 1rem;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .service-item {
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(0, 0, 0, 0.02);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: visible;
+            z-index: 1;
+        }
+
+        .service-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* The number text */
+        .service-number::before {
+            content: attr(data-number);
+            position: absolute;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* The shape — hidden by default */
+        .service-number::after {
+            content: '';
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            background: #1a1a1a;
+        }
+
+        /* On hover: hide number, show shape */
+        @media (hover: hover) {
+            .service-item:hover .service-number::before {
+                opacity: 0;
+                transform: scale(0.6);
+            }
+
+            .service-item:hover .service-number::after {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Touch screens: the block at mid-screen is switched on by script */
+        .service-item.is-active .service-number::before {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+
+        .service-item.is-active .service-number::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Triangle (clip-path) */
+        .service-item--triangle .service-number::after {
+            width: 2.2rem;
+            height: 2.2rem;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        /* Circle */
+        .service-item--circle .service-number::after {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+        }
+
+        /* Square */
+        .service-item--square .service-number::after {
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 0;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .service-description {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            line-height: 1.7;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+            padding: 5rem 4rem;
+            background: #f0f0f0;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-title {
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+        }
+
+        .contact-email-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .contact-arrow {
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            color: #1a1a1a;
+            display: inline-block;
+        }
+
+        .contact-arrow-left {
+            animation: bounceLeft 1.2s ease-in-out infinite;
+        }
+
+        .contact-arrow-right {
+            animation: bounceRight 1.2s ease-in-out infinite;
+        }
+
+        @keyframes bounceLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-8px); }
+        }
+
+        @keyframes bounceRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(8px); }
+        }
+
+        .contact-email {
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            color: #1a1a1a;
+            text-decoration: none;
+            border-bottom: 2px solid #1a1a1a;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            transition: opacity 0.3s;
+        }
+
+        .contact-email:hover {
+            opacity: 0.6;
+        }
+
+        /* Custom email cursor */
+        .email-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
+
+        .email-cursor.visible {
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 4rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .project-card {
+                grid-column: span 1 !important;
+            }
+
+            .featured-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+        }
+
+        /* Subtle animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: fadeInUp 1s ease-out;
+        }
+        /* Hide main navigation when overlay is open */
+        body.overlay-open nav {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hide page scrollbar when overlay is open */
+        html.overlay-scrollbar-hide {
+            overflow-y: hidden !important;
+        }
+        html.overlay-scrollbar-hide body {
+            overflow-y: hidden !important;
+        }
+
+        /* Project Overlay System */
+        .project-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100%;
+            z-index: 9999;
+            display: none;
+            --click-x: 50vw;
+            --click-y: 50vh;
+        }
+
+        .project-overlay.active {
+            display: block;
+        }
+
+        .overlay-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            opacity: 0;
+        }
+
+        .project-overlay.active .overlay-background {
+            animation: fadeIn 0.6s ease 0.25s forwards;
+        }
+
+        .overlay-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            color-scheme: light;
+            clip-path: circle(0% at var(--click-x) var(--click-y));
+        }
+
+        .project-overlay.active .overlay-content {
+            animation: circleExpand 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
+        }
+
+        .project-overlay.active.instant .overlay-content {
+            animation: none;
+            clip-path: circle(150% at 50vw 50vh);
+        }
+
+        .project-overlay.active.instant .overlay-background {
+            animation: none;
+            opacity: 1;
+        }
+
+        .project-overlay.active.instant .overlay-home-link-wrap,
+        .project-overlay.active.instant .overlay-close,
+        .project-overlay.active.instant .overlay-nav-links {
+            animation: none;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-overlay.active.instant .overlay-inner {
+            opacity: 1;
+        }
+
+        .project-overlay.active.instant .overlay-hero-image {
+            animation: none;
+            opacity: 1;
+        }
+
+        @keyframes circleExpand {
+            from { clip-path: circle(0% at var(--click-x) var(--click-y)); }
+            to   { clip-path: circle(150% at var(--click-x) var(--click-y)); }
+        }
+
+        /* Slide away to right - entire overlay */
+        .project-overlay.closing {
+            animation: slideRight 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        }
+
+        .project-overlay.closing .overlay-close {
+            animation: none;
+        }
+
+        @keyframes slideRight {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 0.95;
+            }
+        }
+
+        /* Close button */
+        .overlay-home-link-wrap {
+            position: absolute;
+            top: calc(1.5rem + 2px);
+            left: 4rem;
+            z-index: 10001;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .project-overlay.active .overlay-home-link-wrap {
+            animation: fadeInDown 0.6s ease 0.85s forwards;
+        }
+
+        .project-overlay.closing .overlay-home-link-wrap {
+            opacity: 1;
+            transform: translateY(0);
+            animation: none;
+        }
+
+        .overlay-home-link {
+            font-family: 'Poiret One', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay-home-link:hover {
+            opacity: 0.6;
+        }
+
+        .overlay-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 4rem;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: none;
+            color: #1a1a1a;
+            cursor: pointer;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .project-overlay.active .overlay-close {
+            animation: fadeInDown 0.6s ease 0.85s forwards;
+        }
+
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .overlay-close svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .overlay-close:hover svg {
+            transform: scale(1.6);
+        }
+
+        /* Navigation links to the left of X */
+        .overlay-nav-links {
+            position: absolute;
+            top: calc(1.5rem + 2px);
+            right: calc(4rem + 28px + 2rem);
+            display: flex;
+            gap: 2rem;
+            z-index: 10001;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .project-overlay.active .overlay-nav-links {
+            animation: fadeInDown 0.6s ease 0.85s forwards;
+        }
+
+        .project-overlay.closing .overlay-nav-links {
+            opacity: 1;
+            transform: translateY(0);
+            animation: none;
+        }
+
+        .overlay-nav-links a {
+            font-family: 'Poiret One', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay-nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .overlay-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 4rem 6rem;
+        }
+
+        .project-overlay.active .overlay-inner {
+            opacity: 1;
+        }
+
+        .overlay-hero-image {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            opacity: 1;
+        }
+
+        .project-overlay.active .overlay-hero-image {
+            animation: none;
+        }
+
+        .overlay-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .overlay-header {
+            text-align: center;
+            margin: 3rem 0 4rem;
+        }
+
+        .project-title-large {
+            font-size: 5.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .project-subtitle {
+            font-size: 3rem;
+            color: rgba(20, 20, 20, 0.85);
+            font-family: 'Poiret One', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+
+        .overlay-body {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .project-body-text {
+            max-width: 750px;
+            margin: 3rem auto 0;
+            text-align: left;
+        }
+
+        .project-body-text p {
+            font-size: 1.15rem;
+            line-height: 1.85;
+            color: #1a1a1a;
+            white-space: pre-line;
+        }
+
+        .project-extra-images {
+            margin-top: 3rem;
+        }
+
+        .project-extra-images img {
+            width: 100%;
+            border-radius: 0;
+            margin-bottom: 4rem;
+        }
+
+        /* Row of images sharing one height, widths set from aspect ratio */
+        .project-image-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        .project-image-row img {
+            flex: 1 1 0;
+            min-width: 0;
+            width: 100%;
+            height: auto;
+            margin-bottom: 0;
+        }
+
+        /* Image sitting below a row, aligned to the right-hand column */
+        .project-image-stack {
+            margin-bottom: 4rem;
+        }
+
+        .project-image-stack .project-image-row {
+            margin-bottom: 1rem;
+        }
+
+        .project-image-stack-bottom img {
+            display: block;
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .project-image-row {
+                flex-direction: column;
+            }
+            .project-image-row img {
+                width: 100%;
+            }
+            .project-image-stack-bottom {
+                margin-left: 0 !important;
+            }
+        }
+
+        .project-caption-link {
+            display: block;
+            width: fit-content;
+            margin: 3rem auto 0;
+            text-align: center;
+            color: #1a1a1a;
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 0.25em;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-caption-link:hover {
+            opacity: 0.6;
+        }
+
+        .project-image-caption {
+            max-width: 750px;
+            margin: 6rem auto 3rem;
+            text-align: left;
+            font-size: 1.15rem;
+            line-height: 1.85;
+            color: #1a1a1a;
+            white-space: pre-line;
+        }
+
+        /* Caption aligned flush to the left edge of the images */
+        /* Tighter gap above the caption */
+        .project-image-caption--tight {
+            margin-top: 4rem;
+        }
+
+        .project-image-caption--left {
+            max-width: 750px;
+            margin-left: 0;
+            margin-right: 0;
+            text-align: left;
+        }
+
+        /* Project navigation grid at bottom of each project page */
+        .project-nav-grid-wrap {
+            max-width: 450px;
+            margin: 4rem auto 2rem;
+        }
+
+        .project-nav-grid-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .project-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .project-nav-thumb {
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: opacity 0.2s ease;
+        }
+
+        .project-nav-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    
+        /* =====================================================
+           MOBILE  (phones and small tablets)
+           ===================================================== */
+        @media (max-width: 768px) {
+
+            /* ---- Top navigation: dropdown menu ---- */
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            nav .menu-container {
+                position: static;
+            }
+
+            nav .menu-button {
+                position: relative;
+            }
+
+            /* Larger tap target without changing how the icon looks */
+            nav .menu-button::after {
+                content: '';
+                position: absolute;
+                inset: -14px;
+            }
+
+            nav .menu-items {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                margin: 0;
+                padding: 0.25rem 1.5rem 0.75rem;
+                background: rgba(245, 245, 240, 0.97);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                transition: opacity 0.25s ease, transform 0.25s ease;
+            }
+
+            nav .menu-items a {
+                padding: 0.95rem 0;
+                font-size: 1rem;
+                text-align: right;
+                border-top: 1px solid rgba(0, 0, 0, 0.06);
+            }
+
+            nav .menu-items a:first-child {
+                border-top: none;
+            }
+
+            /* Open/closed is driven by a tap, not by hover */
+            nav .menu-container:not(.open) .menu-items {
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transform: translateY(-8px) !important;
+            }
+
+            nav .menu-container.open .menu-items {
+                opacity: 1;
+                pointer-events: auto;
+                transform: none;
+            }
+
+            nav .menu-container:not(.open) .menu-button {
+                transform: rotate(90deg) !important;
+            }
+
+            nav .menu-container:not(.open) .menu-button span {
+                transform: none !important;
+            }
+
+            nav .menu-container.open .menu-button span:nth-child(1) {
+                transform: translateY(8px) rotate(-60deg);
+            }
+
+            nav .menu-container.open .menu-button span:nth-child(3) {
+                transform: translateY(-8px) rotate(60deg);
+            }
+
+            /* ---- Loader: extend past both screen edges so a collapsing
+               browser toolbar can never expose the page behind it ---- */
+            .loader-overlay {
+                top: -25vh;
+                height: 150vh;
+            }
+
+            /* ---- Hero ---- */
+            .hero {
+                padding: 0 1.5rem;
+            }
+
+            .hero-content {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.1rem, 11vw, 3rem);
+                margin-top: 9vh;
+                margin-bottom: 3.5rem;
+                gap: 0 0.8rem;
+                line-height: 1.15;
+            }
+
+            .hero-design {
+                font-size: clamp(1.9rem, 9.9vw, 2.7rem);
+            }
+
+            .hero-middle {
+                font-size: clamp(2.1rem, 11vw, 3rem);
+            }
+
+            .hero-anchor-nav {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+                margin: 1.5rem 0 2rem;
+            }
+
+            .hero-anchor-nav a {
+                font-size: 0.75rem;
+                padding: 0.95rem 0.5rem;
+            }
+
+            .hero-carousel {
+                margin-top: 2rem;
+                margin-bottom: 4rem;
+            }
+
+            .carousel-track {
+                gap: 1rem;
+            }
+
+            .carousel-item {
+                width: 220px;
+                height: 165px;
+            }
+
+            .hero-subtitle-main {
+                font-size: 1.1rem;
+                line-height: 1.5;
+                margin-top: 4rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero-subtitle-secondary {
+                font-size: 1rem;
+                line-height: 1.7;
+                margin-bottom: 3rem;
+            }
+
+            .hero-subtitle-first {
+                margin-bottom: 0.8rem;
+            }
+
+            /* ---- Sections ---- */
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .projects-grid {
+                gap: 2.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .featured-work {
+                margin: 4rem 0;
+            }
+
+            .featured-container {
+                gap: 1.25rem;
+                margin-bottom: 4rem;
+            }
+
+            .featured-text {
+                padding: 0 1.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+                margin-top: 2.5rem;
+            }
+
+            .contact-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .contact-title {
+                font-size: clamp(2rem, 9vw, 2.5rem);
+            }
+
+            .contact-email-wrapper {
+                gap: 1rem;
+            }
+
+            footer {
+                padding: 2rem 1.5rem;
+                gap: 1.25rem;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.75rem 1.5rem;
+            }
+
+            /* ---- Project overlay: top bar ---- */
+            .overlay-home-link-wrap {
+                left: 1.25rem;
+                top: calc(1rem + 3px);
+            }
+
+            .overlay-close {
+                right: 1.25rem;
+                top: 1rem;
+            }
+
+            .overlay-nav-links {
+                right: calc(1.25rem + 28px + 1.25rem);
+                top: calc(1rem + 3px);
+                gap: 1.25rem;
+            }
+
+            .overlay-home-link,
+            .overlay-nav-links a {
+                font-size: 0.8rem;
+            }
+
+            /* Backing strip so page text doesn't run underneath the links */
+            .project-overlay.active::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3.5rem;
+                background: rgba(255, 255, 255, 0.94);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                z-index: 10000;
+                pointer-events: none;
+                opacity: 0;
+                animation: overlayBarIn 0.6s ease 0.85s forwards;
+            }
+
+            .project-overlay.active.instant::after,
+            .project-overlay.closing::after {
+                animation: none;
+                opacity: 1;
+            }
+
+            /* ---- Project overlay: content ---- */
+            .overlay-inner {
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .overlay-header {
+                margin: 4.5rem 0 0.5rem;
+            }
+
+            .project-title-large {
+                font-size: clamp(2.1rem, 11vw, 3.5rem);
+                line-height: 1.05;
+                overflow-wrap: anywhere;
+            }
+
+            .project-subtitle {
+                font-size: clamp(1.15rem, 5.4vw, 1.6rem);
+                line-height: 1.4;
+            }
+
+            /* Show the whole splash instead of a full-screen centre crop */
+            .overlay-hero-image {
+                height: auto;
+            }
+
+            .overlay-hero-image img {
+                height: auto;
+            }
+
+            .overlay-body {
+                gap: 2.5rem;
+            }
+
+            .project-body-text {
+                margin-top: 0.5rem;
+            }
+
+            .project-body-text p {
+                font-size: 1.05rem;
+                line-height: 1.75;
+            }
+
+            .project-extra-images {
+                margin-top: 0;
+            }
+
+            .project-extra-images img {
+                margin-bottom: 1.5rem !important;
+            }
+
+            /* Scaled images keep roughly their desktop size, capped at full width */
+            .project-extra-images img.is-scaled {
+                width: min(100%, calc(var(--img-scale, 1) * 1072px)) !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            .project-image-stack {
+                margin-bottom: 1.5rem;
+            }
+
+            .project-image-row,
+            .project-image-stack .project-image-row {
+                gap: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .project-image-row img {
+                flex: none;
+                width: 100%;
+                margin-bottom: 0 !important;
+            }
+
+            .project-image-stack-bottom img {
+                width: 100% !important;
+                margin-bottom: 0 !important;
+            }
+
+            .project-image-caption {
+                margin: 2.5rem auto 1.5rem;
+                font-size: 1.05rem;
+                line-height: 1.75;
+            }
+
+            .project-image-caption--tight {
+                margin-top: 2rem;
+            }
+
+            .project-caption-link {
+                margin-top: 1.75rem;
+                font-size: 1.05rem;
+            }
+
+            .project-nav-grid-wrap {
+                margin: 1rem auto 1rem;
+            }
+        }
+
+        @keyframes overlayBarIn {
+            to { opacity: 1; }
+        }
+
+        /* =====================================================
+           TOUCH SCREENS  (no hover available)
+           ===================================================== */
+        @media (hover: none) {
+            /* The colour panel can't be hovered away, so rest it as a band
+               along the bottom and let the project photo show above it */
+            .carousel-overlay,
+            .carousel-item.peek .carousel-overlay {
+                transform: translateY(66.667%);
+            }
+
+            .carousel-item:hover .carousel-overlay,
+            .carousel-item.clicked .carousel-overlay {
+                transform: translateY(100%);
+            }
+
+            /* centre the arrow in the visible third */
+            .carousel-overlay .carousel-arrow {
+                top: calc(16.667% - 8px);
+            }
+
+            /* The trailing envelope cursor needs a mouse */
+            .email-cursor {
+                display: none !important;
+            }
+
+            /* Don't leave tapped buttons stuck in their hover pose */
+            .hero-anchor-nav a:hover {
+                transform: none;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body class="loading">
+    <!-- Loading Animation -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-spinner">
+            <svg class="loader-svg" viewBox="0 0 80 80">
+                <circle class="loader-track" cx="40" cy="40" r="36"></circle>
+                <circle class="loader-progress" cx="40" cy="40" r="36"></circle>
+            </svg>
+            <svg class="loader-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+            </svg>
+        </div>
+        <div class="loader-go" id="loaderGo">GO!</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><a href="#home"><img src="data:image/png;base64,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" alt="Mano Borszeki" style="height: 42px; width: auto; display: block; "></a></div>
+        <div class="menu-container">
+            <div class="menu-items">
+                <a href="#home">Home</a>
+                <a href="#featured-work">Works</a>
+                <a href="#services">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="menu-button" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1><span class="hero-design">MANO</span> <span class="hero-middle">BORSZEKI</span></h1>
+            
+            <!-- Anchor Navigation -->
+            <nav class="hero-anchor-nav">
+                <a href="#featured-work">MY BEST WORK</a>
+                <a href="#work">PROJECTS</a>
+                <a href="#services">SERVICES</a>
+                <a href="#contact">INQUIRY</a>
+            </nav>
+            
+            <div class="hero-carousel">
+                <div class="carousel-track">
+                    <div class="carousel-item" data-project="cymatra"><img src="https://ik.imagekit.io/59aaj9ppt/Locked%20Laptop.png?updatedAt=1786462242841" alt="CYMATRA"><div class="carousel-overlay" style="background:#f4a7b9;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                    <div class="carousel-item" data-project="happy-ant"><img src="https://ik.imagekit.io/59aaj9ppt/10448837.png" alt="Happy Ant Group"><div class="carousel-overlay" style="background:#a8d8a8;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                    <div class="carousel-item" data-project="arabella"><img src="https://ik.imagekit.io/59aaj9ppt/ARABELLA%20WIEDER%20SQUISH.png?tr=w-600" alt="Arabella"><div class="carousel-overlay" style="background:#f7d6a0;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                    <div class="carousel-item" data-project="posters-hungary"><img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=560&h=420&fit=crop" alt="Posters of Hungary"><div class="carousel-overlay" style="background:#a0c4e8;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                    <div class="carousel-item" data-project="logos"><img src="https://images.unsplash.com/photo-1609921212029-bb5a28e60960?w=560&h=420&fit=crop" alt="Logos"><div class="carousel-overlay" style="background:#c9b8e8;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                    <div class="carousel-item" data-project="coramunch"><img src="https://images.unsplash.com/photo-1557683311-eac922347aa1?w=560&h=420&fit=crop" alt="Coramunch"><div class="carousel-overlay" style="background:#f9e07a;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                    <div class="carousel-item" data-project="ame-darienne"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=560&h=420&fit=crop" alt="Âme d'Arienne"><div class="carousel-overlay" style="background:#b8e0d4;"><svg class="carousel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></div></div>
+                </div>
+            </div>
+            <p class="hero-subtitle-main">BRAND IDENTITY & NARRATIVE DESIGNER</p>
+            <p class="hero-subtitle-secondary hero-subtitle-first">In today's visual economy, instant attention is everything. I create brand identities that not only grab attention, but hold it.</p>
+            <p class="hero-subtitle-secondary">I design for organisations and individuals that don't want to end up another pebble by the wayside but a boulder slammed down in the middle of the visual communications highway.</p>
+        </div>
+    </section>
+
+    <!-- Featured Work -->
+    <div class="featured-work" id="featured-work">
+        <div class="featured-container">
+            <div class="featured-image-box" data-project="cymatra" style="cursor:pointer;">
+                <img src="https://ik.imagekit.io/59aaj9ppt/Locked%20Laptop.png?updatedAt=1786462242841" alt="My Best Work">
+            </div>
+            <div class="featured-text">
+                <div class="featured-label">My Best Work</div>
+                <h3 class="featured-title">CYMATRA</h3>
+                <p class="featured-description">Creating a clean, modern brand identity for a cybersecurity startup that advertises custom territory locked, locational signal-based software to safeguard vital items. Secure, seamless, impassable.</p>
+                <a href="javascript:void(0)" class="featured-link" data-project="cymatra">
+                    VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="featured-container">
+            <div class="featured-image-box" data-project="happy-ant" style="cursor:pointer;">
+                <img src="https://ik.imagekit.io/59aaj9ppt/10448837.png" alt="My Best Work">
+            </div>
+            <div class="featured-text">
+                <div class="featured-label">My Best Work</div>
+                <h3 class="featured-title">Happy Ant Group</h3>
+                <p class="featured-description">Building a systems-based visual language and identity for an example brand featuring in my instruction manual on how to construct cooperative, ethical brands.</p>
+                <a href="javascript:void(0)" class="featured-link" data-project="happy-ant">
+                    VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <section id="work" style="padding-top: 2rem; padding-bottom: 2rem;">
+        <div class="section-header">
+            <h2 class="section-title">Projects</h2>
+        </div>
+
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-image-container" data-project="arabella" style="cursor:pointer;">
+                    <img class="project-image" src="https://ik.imagekit.io/59aaj9ppt/ARABELLA%20WIEDER%20SQUISH.png?tr=w-1400" alt="Brand Identity">
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Packaging & Logo</div>
+                    <h3 class="project-title">Arabella</h3>
+                    <p class="project-description">Effective branding kit for up-and-coming quiet luxury jewellery brand.</p>
+                    <a href="javascript:void(0)" class="featured-link" data-project="arabella" style="margin-top: 1rem; font-size: 0.9rem;">VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span></a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image-container" data-project="posters-hungary" style="cursor:pointer;">
+                    <img class="project-image" src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop" alt="Editorial Design">
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Editorial Design</div>
+                    <h3 class="project-title">Posters of Hungary</h3>
+                    <p class="project-description">Editorial collection and exploration of Hungarian posters during the Soviet occupation.</p>
+                    <a href="javascript:void(0)" class="featured-link" data-project="posters-hungary" style="margin-top: 1rem; font-size: 0.9rem;">VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span></a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image-container" data-project="logos" style="cursor:pointer;">
+                    <img class="project-image" src="https://images.unsplash.com/photo-1609921212029-bb5a28e60960?w=800&h=600&fit=crop" alt="Digital Experience">
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Graphic Design</div>
+                    <h3 class="project-title">Logos</h3>
+                    <p class="project-description">Archive of logos from all projects, freelancing, uni, personal.</p>
+                    <a href="javascript:void(0)" class="featured-link" data-project="logos" style="margin-top: 1rem; font-size: 0.9rem;">VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span></a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image-container" data-project="coramunch" style="cursor:pointer;">
+                    <img class="project-image" src="https://images.unsplash.com/photo-1557683311-eac922347aa1?w=800&h=600&fit=crop" alt="Packaging">
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Brand Identity & Packaging</div>
+                    <h3 class="project-title">Coramunch</h3>
+                    <p class="project-description">A coral positive sunscreen that doesn't just block harmful UV rays but also serves to deliver nutrients to the reef.</p>
+                    <a href="javascript:void(0)" class="featured-link" data-project="coramunch" style="margin-top: 1rem; font-size: 0.9rem;">VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span></a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image-container" data-project="ame-darienne" style="cursor:pointer;">
+                    <img class="project-image" src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=600&fit=crop" alt="Campaign">
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Fashion & Sustainability</div>
+                    <h3 class="project-title">Âme d'Arienne</h3>
+                    <p class="project-description">Parisian, luxurious, classy, sustainable. Separating high fashion from environmentally dubious production.</p>
+                    <a href="javascript:void(0)" class="featured-link" data-project="ame-darienne" style="margin-top: 1rem; font-size: 0.9rem;">VIEW PROJECT <span style="font-size: 1.5em; line-height: 0; vertical-align: middle;">·</span></a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" style="padding-top: 2rem; padding-bottom: 4rem;">
+        <div class="section-header">
+            <h2 class="section-title">What I do</h2>
+            <p class="hero-subtitle-main" style="margin-top: 2rem;">Branding, Logo Design, Visual Identity</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-item service-item--triangle">
+                <div class="service-number" data-number="01"></div>
+                <h3 class="service-title">Brand Identity</h3>
+            </div>
+
+            <div class="service-item service-item--circle">
+                <div class="service-number" data-number="02"></div>
+                <h3 class="service-title">Storytelling</h3>
+            </div>
+
+            <div class="service-item service-item--square">
+                <div class="service-number" data-number="03"></div>
+                <h3 class="service-title">Graphic Design</h3>
+            </div>
+        </div>
+        <h3 class="service-title" style="text-align: center; margin-top: 6rem;">THE HEART AND SOUL OF IT</h3>
+        <p class="service-description" style="text-align: center; max-width: 800px; margin: 1.5rem auto 0;">If you think combining branding, storytelling, attention retention design, and a pinch of marketing psychology to create gripping and timeless specialised identities is a good idea, <span style="white-space: nowrap;">I got you.</span><br><br>I've worked with businesses, individual clients, a company and an agency to perfect projects. I'm on the lookout for the next role that I can sink my designer fangs into.<br><br>I work across multiple mediums to create identities and narratives with depth that help businesses find, connect with, and retain their audiences by fostering a signature brand confidence and authenticity.</p>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact-section" id="contact">
+        <h2 class="contact-title">Do you have a project or role in mind?</h2>
+        <div class="contact-email-wrapper">
+            <span class="contact-arrow contact-arrow-left">→</span>
+            <a href="/cdn-cgi/l/email-protection#3f525e51505d504d4c455a54561148504d547f58525e5653115c5052" class="contact-email">send me an email</a>
+            <span class="contact-arrow contact-arrow-right">←</span>
+        </div>
+        <p style="margin-top: 1.5rem; font-size: 1.1rem; color: rgba(20, 20, 20, 0.7);">or contact me on <a href="https://www.linkedin.com/in/mborszeki" target="_blank" style="color: #1a1a1a; text-decoration: underline;">LinkedIn</a></p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>2026 Mano Borszeki</p>
+        <div class="footer-links">
+                <a href="https://www.linkedin.com/in/mborszeki" target="_blank">LinkedIn</a>
+                <a href="https://www.behance.net/manoborszeki1" target="_blank">Behance</a>
+                <a href="/cdn-cgi/l/email-protection#503d313e3f323f22232a353b397e273f223b10373d31393c7e333f3d">Work Inquiry</a>
+            </div>
+    </footer>
+
+    <!-- Custom email cursor -->
+    <div class="email-cursor" id="emailCursor">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 32 32">
+            <rect x="2" y="6" width="28" height="20" rx="2" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="2"/>
+            <path d="M0 5 L16 18 L32 5" fill="none" stroke="#f0f0f0" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Shared resize timeout variable
+        let resizeTimeout;
+
+        // Adjust hero section to ensure all content is visible below navigation
+        function adjustHeroPosition() {
+            const nav = document.querySelector('nav');
+            const hero = document.querySelector('.hero');
+            
+            if (nav && hero) {
+                const navHeight = nav.offsetHeight;
+                // Always add padding equal to nav height to push content below the fixed nav
+                hero.style.paddingTop = `${navHeight}px`;
+            }
+        }
+        
+        // Run on load after a brief delay to ensure content is rendered
+        setTimeout(adjustHeroPosition, 100);
+
+        // Loader: progress circle driven by actual page load, then GO! sequence
+        (function() {
+            const progress   = document.querySelector('.loader-progress');
+            const circumference = 226.2;
+            let loadProgress = 0;
+            let loaded       = false;
+            let animFrame;
+
+            // Lock scroll during loading animation
+            function preventLoadScroll(e) { e.preventDefault(); }
+            function preventLoadScrollKeys(e) {
+                const keys = [32, 33, 34, 35, 36, 37, 38, 39, 40];
+                if (keys.includes(e.keyCode)) e.preventDefault();
+            }
+            window.addEventListener('wheel', preventLoadScroll, { passive: false });
+            window.addEventListener('touchmove', preventLoadScroll, { passive: false });
+            window.addEventListener('keydown', preventLoadScrollKeys, { passive: false });
+
+            // Smoothly animate the dashoffset toward the target
+            let displayProgress = 0;
+
+            function updateCircle() {
+                // While not loaded, creep toward 90% to give visual feedback
+                // Once loaded, jump target to 100%
+                const target = loaded ? 1 : Math.min(loadProgress, 0.9);
+                displayProgress += (target - displayProgress) * 0.08;
+                if (loaded && target - displayProgress < 0.001) displayProgress = 1;
+
+                progress.style.strokeDashoffset = circumference * (1 - displayProgress);
+
+                if (displayProgress < 0.999) {
+                    animFrame = requestAnimationFrame(updateCircle);
+                } else {
+                    // Circle complete — trigger GO! sequence
+                    progress.style.strokeDashoffset = '0';
+                    startGoSequence();
+                }
+            }
+
+            // Track resource loading for progress estimation
+            function trackProgress() {
+                const entries = performance.getEntriesByType('resource');
+                // Use count-based progress as a simple heuristic
+                // Most pages load 10-50 resources; scale accordingly
+                loadProgress = Math.min(entries.length / 20, 0.85);
+            }
+
+            // Poll resource count for progress updates
+            const progressInterval = setInterval(trackProgress, 100);
+
+            window.addEventListener('load', function() {
+                clearInterval(progressInterval);
+                loaded = true;
+            });
+
+            // Start the circle animation after a 0.5s buffer
+            setTimeout(function() {
+                animFrame = requestAnimationFrame(updateCircle);
+            }, 500);
+
+            function startGoSequence() {
+                // Wait 0.25s after circle completes before starting GO!
+                setTimeout(function() {
+                    runGoAnimation();
+                }, 250);
+            }
+
+            function runGoAnimation() {
+                const spinner  = document.querySelector('.loader-spinner');
+                const overlay  = document.getElementById('loaderOverlay');
+                const goText   = document.getElementById('loaderGo');
+
+                // Calculate font size so "GO!" fills the screen minus 80px padding each side
+                const targetWidth = window.innerWidth - (window.innerWidth <= 768 ? 64 : 160);
+                goText.style.fontSize = '10px';
+                goText.style.opacity  = '1';
+                goText.style.transform = 'translate(-50%, -50%) scale(1)';
+                const measuredWidth = goText.offsetWidth;
+                const finalSize = Math.floor((targetWidth / measuredWidth) * 10);
+                goText.style.opacity   = '0';
+                goText.style.transform = 'translate(-50%, -50%) scale(0)';
+                goText.style.fontSize  = finalSize + 'px';
+
+                const tl = gsap.timeline();
+
+                // Fade out spinner
+                tl.to(spinner, {
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: 'power2.out',
+                });
+
+                // Scale up "GO!" — keeps expanding beyond target size so it's
+                // still growing when the slide pulls it away
+                tl.set(goText, { opacity: 1 });
+                tl.to(goText, {
+                    scale: 2.5,
+                    duration: 1.61,
+                    ease: 'power2.inOut',
+                }, '<');
+
+                // Start the carousel 0.4s before "GO!" finishes scaling
+                tl.call(function () {
+                    if (typeof window.startCarousel === 'function') window.startCarousel();
+                }, null, '-=0.4');
+
+                // Slide everything up
+                tl.to(overlay, {
+                    // travel far enough to clear the screen even when the overlay is oversized
+                    y: -Math.max(window.innerHeight, overlay.getBoundingClientRect().bottom),
+                    duration: 0.69,
+                    ease: 'power3.in',
+                    onComplete() {
+                        overlay.remove();
+                        document.body.classList.remove('loading');
+                        // Unlock scroll
+                        window.removeEventListener('wheel', preventLoadScroll);
+                        window.removeEventListener('touchmove', preventLoadScroll);
+                        window.removeEventListener('keydown', preventLoadScrollKeys);
+                    }
+                }, '-=0.575');
+            }
+        })();
+        
+        // Re-run on resize with debounce
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                adjustHeroPosition();
+            }, 250);
+        });
+
+        // ── GSAP cinematic anchor transitions ─────────────────────────────────
+        //
+        // The stage is a fixed full-viewport panel that slides up from below.
+        // Instead of cloning a single section (which loses layout context like
+        // max-width centering, flex alignment, etc.), we clone the ENTIRE body
+        // into the stage and scroll the stage to the correct offset. This way
+        // every CSS rule renders identically — the stage is effectively a
+        // second viewport showing the destination.
+        //
+        // Sequence:
+        //   1. Clone full body into stage, scroll stage to destination offset
+        //   2. Slide stage up from below (user sees destination content rising)
+        //   3. Once stage covers viewport, snap-scroll the real page behind it
+        //   4. Instantly destroy stage to reveal the real page beneath
+
+        const transStage = document.createElement('div');
+        transStage.id = 'transition-stage';
+        Object.assign(transStage.style, {
+            position:   'fixed',
+            top:        '0',
+            left:       '0',
+            width:      '100%',
+            height:     '0',
+            overflow:   'hidden',
+            zIndex:     '999',
+            background: '#ffffff',
+        });
+        document.body.appendChild(transStage);
+
+        let isTransitioning  = false;
+        let currentTl        = null;
+        let queuedTargetId   = null;
+        let currentTargetId  = null;
+
+        function cleanupStage() {
+            gsap.set(transStage, { clearProps: 'transform,opacity' });
+            transStage.style.height = '0';
+            transStage.innerHTML    = '';
+        }
+
+        function getScrollTarget(targetId) {
+            if (targetId === '#home') return 0;
+            const targetEl = document.querySelector(targetId);
+            if (!targetEl) return 0;
+            const nav       = document.querySelector('nav');
+            const navHeight = nav ? nav.offsetHeight : 0;
+            const rect = targetEl.getBoundingClientRect();
+            return Math.max(0, rect.top + window.pageYOffset - navHeight);
+        }
+
+        function isAlreadyAtTarget(targetId, targetEl) {
+            if (targetId === '#home') {
+                return window.pageYOffset < 10;
+            }
+            let targetY = getScrollTarget(targetId);
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            targetY = Math.min(targetY, maxScroll);
+            return Math.abs(window.pageYOffset - targetY) < 10;
+        }
+
+        function populateStage(targetY) {
+            const nav       = document.querySelector('nav');
+            const navHeight = nav ? nav.offsetHeight : 0;
+            const realTrack = document.querySelector('.carousel-track');
+
+            transStage.innerHTML = '';
+
+            const inner = document.createElement('div');
+            Object.assign(inner.style, {
+                position: 'absolute',
+                top:      '0',
+                left:     '0',
+                width:    '100%',
+            });
+
+            Array.from(document.body.children).forEach(child => {
+                if (child === transStage) return;
+                if (child.id === 'projectOverlay') return;
+                if (child.id === 'emailCursor') return;
+                if (child.id === 'loaderOverlay') return;
+                if (child.tagName === 'SCRIPT') return;
+                inner.appendChild(child.cloneNode(true));
+            });
+
+            const clonedHeroContent = inner.querySelector('.hero-content');
+            if (clonedHeroContent) {
+                clonedHeroContent.style.animation = 'none';
+            }
+
+            const clonedNav = inner.querySelector('nav');
+            if (clonedNav) {
+                clonedNav.style.background = '#ffffff';
+                clonedNav.style.backdropFilter = 'none';
+                clonedNav.style.borderBottom = 'none';
+                Array.from(clonedNav.children).forEach(child => {
+                    child.style.visibility = 'hidden';
+                });
+            }
+
+            const clonedTrack = inner.querySelector('.carousel-track');
+            if (realTrack && clonedTrack) {
+                clonedTrack.style.transform = realTrack.style.transform;
+                clonedTrack.style.willChange = 'auto';
+            }
+
+            inner.style.marginTop = (-targetY) + 'px';
+            transStage.appendChild(inner);
+
+            return { realTrack, clonedTrack };
+        }
+
+        function runTransition(targetId) {
+            currentTargetId = targetId;
+            let   targetY   = getScrollTarget(targetId);
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            targetY = Math.min(targetY, maxScroll);
+
+            if (currentTl) {
+                currentTl.kill();
+                currentTl = null;
+            }
+
+            const { realTrack, clonedTrack } = populateStage(targetY);
+
+            transStage.style.height = '100vh';
+            gsap.set(transStage, { y: window.innerHeight, opacity: 1 });
+
+            const tl = gsap.timeline();
+            currentTl = tl;
+
+            tl.to(transStage, {
+                y: 0,
+                duration: 0.9,
+                ease: 'power3.inOut',
+                onUpdate() {
+                    if (realTrack && clonedTrack) {
+                        clonedTrack.style.transform = realTrack.style.transform;
+                    }
+                },
+                onComplete() {
+                    window.scrollTo(0, targetY);
+
+                    if (queuedTargetId) {
+                        const nextTarget = queuedTargetId;
+                        queuedTargetId = null;
+                        runTransition(nextTarget);
+                        return;
+                    }
+
+                    cleanupStage();
+                    isTransitioning  = false;
+                    currentTl        = null;
+                    currentTargetId  = null;
+                    queuedTargetId   = null;
+                }
+            });
+        }
+
+        function reverseAndChain(nextTargetId) {
+            if (currentTl) {
+                currentTl.kill();
+                currentTl = null;
+            }
+
+            const currentY    = gsap.getProperty(transStage, 'y');
+            const fullDistance = window.innerHeight;
+            const progress    = 1 - (currentY / fullDistance);
+            const duration    = Math.max(0.12, progress * 0.4);
+
+            const tl = gsap.timeline();
+            currentTl = tl;
+
+            tl.to(transStage, {
+                y: fullDistance,
+                duration: duration,
+                ease: 'power2.in',
+                onComplete() {
+                    cleanupStage();
+
+                    const finalTarget = queuedTargetId || nextTargetId;
+                    queuedTargetId = null;
+
+                    const finalEl = document.querySelector(finalTarget);
+                    if (finalEl && isAlreadyAtTarget(finalTarget, finalEl)) {
+                        isTransitioning  = false;
+                        currentTl        = null;
+                        currentTargetId  = null;
+                        return;
+                    }
+
+                    runTransition(finalTarget);
+                }
+            });
+        }
+
+        function cinematicScrollTo(targetId) {
+            const targetEl = document.querySelector(targetId);
+            if (!targetEl) return;
+
+            if (isTransitioning) {
+                if (targetId === currentTargetId) return;
+
+                queuedTargetId = targetId;
+                reverseAndChain(targetId);
+                return;
+            }
+
+            if (isAlreadyAtTarget(targetId, targetEl)) return;
+
+            isTransitioning  = true;
+            queuedTargetId   = null;
+            runTransition(targetId);
+        }
+
+        document.querySelectorAll('.hero-anchor-nav a, .menu-items a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    e.preventDefault();
+                    cinematicScrollTo(targetId);
+                }
+            });
+        });
+
+        // Handle hash in URL on page load
+        window.addEventListener('load', function() {
+            const hash = window.location.hash;
+            if (hash && document.querySelector(hash)) {
+                setTimeout(() => cinematicScrollTo(hash), 300);
+            }
+        });
+
+        // Logo clicks back to top
+        document.querySelector('.logo a').addEventListener('click', function(e) {
+            e.preventDefault();
+            const overlay = document.getElementById('projectOverlay');
+            if (overlay && overlay.classList.contains('active')) return;
+            cinematicScrollTo('#home');
+        });
+
+        // Lagging email cursor for contact section
+        const emailCursor = document.getElementById('emailCursor');
+        const contactSection = document.querySelector('.contact-section');
+
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let isInContact = false;
+        let rafId = null;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        contactSection.addEventListener('mouseenter', () => {
+            isInContact = true;
+            emailCursor.classList.add('visible');
+            if (!rafId) animate();
+        });
+
+        contactSection.addEventListener('mouseleave', () => {
+            isInContact = false;
+            emailCursor.classList.remove('visible');
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        });
+
+        function animate() {
+            // Lerp factor — lower = more lag (0.08 = sluggish drag)
+            const lerp = 0.08;
+            cursorX += (mouseX - cursorX) * lerp;
+            cursorY += (mouseY - cursorY) * lerp;
+            emailCursor.style.left = cursorX + 'px';
+            emailCursor.style.top = cursorY + 'px';
+            if (isInContact) {
+                rafId = requestAnimationFrame(animate);
+            }
+        }
+    </script>
+
+    <!-- Project Overlay (single, dynamically populated) -->
+    <div class="project-overlay" id="projectOverlay">
+        <div class="overlay-background"></div>
+        
+        <div class="overlay-home-link-wrap">
+            <a href="#home" class="overlay-home-link" id="overlayHomeLink">Home</a>
+        </div>
+
+        <div class="overlay-nav-links">
+            <a href="#featured-work">Works</a>
+            <a href="#services">About</a>
+        </div>
+        
+        <button class="overlay-close" id="closeOverlay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        
+        <div class="overlay-content" id="overlayContent">
+            <div class="overlay-inner">
+                <div class="overlay-header">
+                    <h1 class="project-title-large" id="overlayTitle"></h1>
+                    <p class="project-subtitle" id="overlaySubtitle"></p>
+                </div>
+            </div>
+
+            <div class="overlay-hero-image">
+                <img id="overlayHeroImage" src="" alt="">
+            </div>
+
+            <div class="overlay-inner">
+                <div class="overlay-body">
+                    <div class="project-body-text" id="overlayBodyText">
+                        <p id="overlayBody"></p>
+                    </div>
+                    <div class="project-extra-images" id="overlayExtraImages"></div>
+
+                    <!-- Project navigation grid -->
+                    <div class="project-nav-grid-wrap">
+                        <p class="project-nav-grid-label">Next Project</p>
+                        <div class="project-nav-grid" id="projectNavGrid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer repeated inside overlay -->
+            <footer>
+                <p>2026 Mano Borszeki</p>
+                <div class="footer-links">
+                    <a href="https://www.linkedin.com/in/mborszeki" target="_blank">LinkedIn</a>
+                    <a href="https://www.behance.net/manoborszeki1" target="_blank">Behance</a>
+                    <a href="/cdn-cgi/l/email-protection#1e737f70717c716c6d647b75773069716c755e79737f7772307d7173">Work Inquiry</a>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // ── Project data store ─────────────────────────────────────────────────
+        const PROJECT_DATA = {
+            'cymatra': {
+                label: 'My Best Work',
+                title: 'CYMATRA',
+                subtitle: 'The Sound of Security | May 2025',
+                image: 'https://ik.imagekit.io/59aaj9ppt/Locked%20Laptop.png?updatedAt=1789560689',
+                overview: 'Creating a clean, modern brand identity for a cybersecurity startup that advertises custom territory locked, locational signal-based software to safeguard vital items. Secure, seamless, impassable.',
+                role: 'Brand Identity Design, Visual Systems',
+                year: '2024',
+                body: 'Cymatra is a new age encryption technology, harnessing precise locational signals to prevent unauthorised access creating an ultra-tight system that is nigh on immune to traditional cyber attacks. Given that trustworthy digital security is difficult to find in modern times, tangibility and physical dependability are the future of network safeguarding.\n\nThis brand identity was created for a startup led by a cybersecurity engineer. The software was finished and needed a suitable veneer. I designed a visual world that revolves around the employed technology that communicates the startup’s core values and promises.',
+                skills: 'Branding, Logo Design, Visual Identity',
+                flashImages: [
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/Large%20No%20borders.png', scale: 0.75 },
+                    'https://ik.imagekit.io/59aaj9ppt/Laptop%20Websites.png',
+                    'https://ik.imagekit.io/59aaj9ppt/tokyo%20crossing%202.png',
+                    'https://ik.imagekit.io/59aaj9ppt/Subway%202.jpg',
+                    'https://ik.imagekit.io/59aaj9ppt/office.png',
+                    'https://ik.imagekit.io/59aaj9ppt/No%20brim%20background.png',
+                    'https://ik.imagekit.io/59aaj9ppt/Shork%203.jpg',
+                    'https://ik.imagekit.io/59aaj9ppt/Sherk.png'
+                ],
+                images: [
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/Large%20No%20borders.png?updatedAt=1789560689', scale: 0.85 },
+                    'https://ik.imagekit.io/59aaj9ppt/Laptop%20Websites.png?updatedAt=1789560689',
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/Colour%20Palette.png', scale: 0.6, align: 'left' },
+                    { caption: 'The logo was inspired by cymatics, scientific advancement and water ripples. These three topics were fused over time to create the current logo that aims to exude static strength created from natural shapes and the streamlined modernity of sci-tech branding.', align: 'left' },
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/Logo%20Evolution.png?updatedAt=1789737458', extraGap: 2 },
+                    'https://ik.imagekit.io/59aaj9ppt/tokyo%20crossing%202.png?updatedAt=1789560689',
+                    { caption: 'Minimalism.\nStability.\nPrecision.\n\nTypography that keeps it simple, just like Cymatra does.\nIt’s all about the software, no flashy extras required.', align: 'left' },
+                    'https://ik.imagekit.io/59aaj9ppt/Typography%202.png?updatedAt=1789560689',
+                    { caption: 'A verbal identity that exudes confidence in the product.\nCreating trust through strength and reliability.', align: 'left', tight: true },
+                    'https://ik.imagekit.io/59aaj9ppt/UI%20+%20Verbal%20Identity.png?updatedAt=1789561230',
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/Subway%202.jpg?updatedAt=1789560689', scale: 0.85 },
+                    'https://ik.imagekit.io/59aaj9ppt/office.png?updatedAt=1789560689'
+                ]
+            },
+            'happy-ant': {
+                label: 'My Best Work',
+                title: 'Happy Ant Group',
+                subtitle: 'Cooperative Brand Identity',
+                image: 'https://ik.imagekit.io/59aaj9ppt/10448837.png',
+                overview: 'Building a systems-based visual language and identity for an example brand featuring in my instruction manual on how to construct cooperative, ethical brands.',
+                role: 'Brand Identity Design, Visual Systems, Editorial Design',
+                year: '2024',
+                body: 'I wrote my dissertation on the benefits of cooperative structures versus traditional capitalist ones, during this I created a visual identity for a cooperative called Happy Ant Group. The issue I ran into was that cooperative design was often rooted in collectivist, environmentalist principles and values, however the most attractive and popular design ran on luxury and promises of success. I used my research on corporate design to maximise the fashionability of the identity to the modern metric-obsessed eye while also maintaining the friendly and warm cooperative feel that attracts fellow humanitarians.',
+                flashImages: [
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/HAG%20V3%20png.png', scale: 0.75 },
+                    'https://ik.imagekit.io/59aaj9ppt/Termite.png',
+                    'https://ik.imagekit.io/59aaj9ppt/tote.png',
+                    'https://ik.imagekit.io/59aaj9ppt/126.png',
+                    'https://ik.imagekit.io/59aaj9ppt/billen_boarden_verticulus.jpg',
+                    'https://ik.imagekit.io/59aaj9ppt/billboard%20advert%202.png',
+                    'https://ik.imagekit.io/59aaj9ppt/Spiral_notebooks_mockup.png',
+                    'https://ik.imagekit.io/59aaj9ppt/Opened_spiral_notebook_near_vintage_lamp_mockup.png'
+                ],
+                images: [
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/HAG%20V3%20png.png', scale: 0.65 },
+                    'https://ik.imagekit.io/59aaj9ppt/paletta%20oranga2.png?updatedAt=1793572282202',
+                    { caption: 'As this fictional cooperative is heavily aligned with left-wing ideals such as collectivism, unionisation and environmentalism, the visual system followed suit. I took heavy inspiration from the natural forms found in hive-minded animals. The logo can be seen to mimic the shape of one such structure created by the collective efforts of a colony of termites.' },
+                    'https://ik.imagekit.io/59aaj9ppt/Termite.png',
+                    { row: [
+                        { src: 'https://ik.imagekit.io/59aaj9ppt/tote.png', scale: 1.82 },
+                        'https://ik.imagekit.io/59aaj9ppt/126.png'
+                    ], below: { src: 'https://ik.imagekit.io/59aaj9ppt/billen_boarden_verticulus.jpg?tr=w-1600', scale: 0.72 } },
+                    { caption: 'The holy grail of asset is this building brick. The idea is that anything can be created if we the people work together. The brick can be stretched, scaled and replicated as long as the end curves remain the same for cohesiveness.' },
+                    { src: 'https://ik.imagekit.io/59aaj9ppt/Brick.png', scale: 0.16 },
+                    'https://ik.imagekit.io/59aaj9ppt/billboard%20advert%202.png',
+                    { caption: 'Part of my project was to create a comedic booklet that explains the theory of how to create a logo and visual style for any upcoming cooperative that avoids the usual pitfalls of corporate design that would make it unapproachable to customers. This includes such things as typography, colour schemes, do\'s and don\'ts and identifying key motivations to build a visual style. The link below leads to an interactive flipbook.',
+                      link: { href: 'https://go.fliplink.me/view/97E22C43-EA13-4200-B378-CD7D48CB5430',
+                              label: 'Cooperative Design Manual' } },
+                    'https://ik.imagekit.io/59aaj9ppt/Spiral_notebooks_mockup.png',
+                    'https://ik.imagekit.io/59aaj9ppt/Opened_spiral_notebook_near_vintage_lamp_mockup.png'
+
+                ]
+            },
+            'arabella': {
+                label: 'Projects',
+                title: 'Arabella',
+                subtitle: 'Quiet Luxury Jewellery Branding',
+                image: 'https://ik.imagekit.io/59aaj9ppt/ARABELLA%20WIEDER.png?tr=w-2400&updatedAt=1794363588',
+                overview: 'Effective branding kit for an up-and-coming quiet luxury jewellery brand. Refined, restrained, and unmistakably premium — a visual identity that speaks before a word is said.',
+                role: 'Brand Identity Design, Packaging Design, Logo Design',
+                year: '2024',
+                body: 'This client project was a mix of logo and product design, heavy on typography and simple forms. The task was to create a brand image that melts in with the modern simplicity of quiet luxury in order to exude an aura of casual sophistication with a poignant edge of the haute couture personality.\n\nArabella Wieder is a pointed and sharp jewellery brand that aims at the monumental task of transforming the buyer’s self image from the person that they are to the person that they want to be in the form of accessorisation.',
+                images: [
+                    'https://ik.imagekit.io/59aaj9ppt/Box2_expanded-min-min.png?tr=w-2400'
+                ]
+            },
+            'posters-hungary': {
+                label: 'Projects',
+                title: 'Posters of Hungary',
+                subtitle: 'Editorial Design & Research',
+                image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1400&h=800&fit=crop',
+                overview: 'Editorial collection and exploration of Hungarian graphic design during the Soviet occupation. A critical archive of political imagery, propaganda aesthetics, and the subversive language of design under censorship.',
+                role: 'Editorial Design, Research, Typography',
+                year: '2023'
+            },
+            'logos': {
+                label: 'Projects',
+                title: 'Logos',
+                subtitle: 'Graphic Design Archive',
+                image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?w=1400&h=800&fit=crop',
+                overview: 'A curated archive of logomarks spanning client work, freelance commissions, university projects, and personal experimentation. A living document of evolving craft and visual thinking.',
+                role: 'Logo Design, Typography, Graphic Design',
+                year: '2022 — ongoing'
+            },
+            'coramunch': {
+                label: 'Projects',
+                title: 'Coramunch',
+                subtitle: 'Brand Identity & Packaging',
+                image: 'https://images.unsplash.com/photo-1557683311-eac922347aa1?w=1400&h=800&fit=crop',
+                overview: 'A coral-positive sunscreen that doesn\'t just protect from the sun — it actively delivers nutrients to the reef. Brand identity and packaging designed to communicate scientific credibility with a spirit of environmental optimism.',
+                role: 'Brand Identity, Packaging Design, Visual Language',
+                year: '2024'
+            },
+            'ame-darienne': {
+                label: 'Projects',
+                title: 'Âme d\'Arienne',
+                subtitle: 'Fashion & Sustainability',
+                image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&h=800&fit=crop',
+                overview: 'Parisian, luxurious, classy, sustainable. A brand identity that separates high fashion from environmentally dubious production — proving that elegance and ethics are not mutually exclusive.',
+                role: 'Brand Identity, Fashion Direction, Sustainability Messaging',
+                year: '2023'
+            }
+        };
+
+        // ── Overlay System ─────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay     = document.getElementById('projectOverlay');
+            const closeBtn    = document.getElementById('closeOverlay');
+            const overlayNavLinks = document.querySelectorAll('.overlay-nav-links a');
+            const navLinks    = document.querySelectorAll('.menu-items a, .logo a');
+
+            // Grab all overlay text/image targets
+            const elTitle    = document.getElementById('overlayTitle');
+            const elSubtitle = document.getElementById('overlaySubtitle');
+            const elImage    = document.getElementById('overlayHeroImage');
+
+            // ── openOverlay — exposed globally so carousel can call it too ──
+            let savedScrollY = 0;
+            const overlayContent = document.getElementById('overlayContent');
+
+            // Block scrolling on the page but allow overlay content to scroll
+            function preventScroll(e) {
+                // Allow scrolling inside the overlay content
+                if (overlayContent && overlayContent.contains(e.target)) return;
+                e.preventDefault();
+            }
+            function preventScrollKeys(e) {
+                if (overlayContent && overlayContent.contains(e.target)) return;
+                const keys = [32, 33, 34, 35, 36, 37, 38, 39, 40];
+                if (keys.includes(e.keyCode)) e.preventDefault();
+            }
+            let scrollbarHideTimeout = null;
+
+            function lockScroll() {
+                savedScrollY = window.scrollY;
+                window.addEventListener('wheel', preventScroll, { passive: false });
+                window.addEventListener('touchmove', preventScroll, { passive: false });
+                window.addEventListener('keydown', preventScrollKeys, { passive: false });
+                // Hide the page scrollbar after the circle animation has covered the screen
+                scrollbarHideTimeout = setTimeout(function() {
+                    document.documentElement.classList.add('overlay-scrollbar-hide');
+                    scrollbarHideTimeout = null;
+                }, 800);
+            }
+            function unlockScroll() {
+                // Cancel pending scrollbar hide if it hasn't fired yet
+                if (scrollbarHideTimeout) {
+                    clearTimeout(scrollbarHideTimeout);
+                    scrollbarHideTimeout = null;
+                }
+                document.documentElement.classList.remove('overlay-scrollbar-hide');
+                window.removeEventListener('wheel', preventScroll);
+                window.removeEventListener('touchmove', preventScroll);
+                window.removeEventListener('keydown', preventScrollKeys);
+            }
+
+            // Helper to populate overlay content for a given project
+            let currentProjectId = null;
+
+            function populateOverlayContent(projectId) {
+                const data = PROJECT_DATA[projectId];
+                if (!data) return;
+                currentProjectId = projectId;
+
+                elTitle.textContent    = data.title;
+                elSubtitle.textContent = data.subtitle;
+                elImage.src            = data.image;
+                elImage.alt            = data.title;
+                document.getElementById('overlayBody').textContent = data.body || '';
+
+                // Populate extra images
+                const extraImagesContainer = document.getElementById('overlayExtraImages');
+                extraImagesContainer.innerHTML = '';
+                if (data.images && data.images.length) {
+                    data.images.forEach(function(item) {
+                        if (typeof item === 'object' && item !== null && item.row) {
+                            const wrap = document.createElement('div');
+                            wrap.className = 'project-image-stack';
+
+                            const rowEl = document.createElement('div');
+                            rowEl.className = 'project-image-row';
+                            const rowImgs = [];
+                            let belowWrap = null;
+
+                            // Indent the image below so its left edge lines up with
+                            // the start of the last column in the row above
+                            const alignBelow = function () {
+                                if (!belowWrap || rowImgs.length < 2) return;
+                                if (window.innerWidth <= 768) {
+                                    belowWrap.style.marginLeft = '';
+                                    belowWrap.style.marginTop = '';
+                                    return;
+                                }
+                                const styles = getComputedStyle(rowEl);
+                                const gap = parseFloat(styles.columnGap) || 0;
+                                let offset = 0;
+                                for (let k = 0; k < rowImgs.length - 1; k++) {
+                                    offset += rowImgs[k].getBoundingClientRect().width + gap;
+                                }
+                                belowWrap.style.marginLeft = offset.toFixed(2) + 'px';
+
+                                // Row is top-aligned, so a taller first image leaves slack
+                                // beneath the last one. Pull the image below up by that
+                                // slack: its gap then matches the gap between the columns.
+                                const lastImg = rowImgs[rowImgs.length - 1];
+                                const slack = rowEl.getBoundingClientRect().height
+                                    - lastImg.getBoundingClientRect().height;
+                                belowWrap.style.marginTop = slack > 0
+                                    ? (-slack).toFixed(2) + 'px'
+                                    : '';
+                            };
+
+                            item.row.forEach(function (entry) {
+                                const src = (typeof entry === 'object' && entry !== null)
+                                    ? entry.src : entry;
+                                const weight = (typeof entry === 'object' && entry !== null && entry.scale)
+                                    ? entry.scale : 1;
+                                const rowImg = document.createElement('img');
+                                rowImg.alt = data.title;
+                                // Width proportional to aspect ratio => images share one
+                                // height, unless a scale weight deliberately skews it
+                                rowImg.addEventListener('load', function () {
+                                    if (rowImg.naturalHeight) {
+                                        rowImg.style.flexGrow =
+                                            (weight * rowImg.naturalWidth / rowImg.naturalHeight).toFixed(4);
+                                    }
+                                    alignBelow();
+                                });
+                                rowImg.addEventListener('error', function () {
+                                    console.warn('[row image failed to load]', rowImg.src);
+                                });
+                                rowImg.src = src;
+                                rowEl.appendChild(rowImg);
+                                rowImgs.push(rowImg);
+                            });
+
+                            wrap.appendChild(rowEl);
+
+                            if (item.below) {
+                                const belowSrc = (typeof item.below === 'object' && item.below !== null)
+                                    ? item.below.src : item.below;
+                                const belowScale = (typeof item.below === 'object' && item.below !== null
+                                    && item.below.scale) ? item.below.scale : 1;
+                                belowWrap = document.createElement('div');
+                                belowWrap.className = 'project-image-stack-bottom';
+                                const belowImg = document.createElement('img');
+                                belowImg.alt = data.title;
+                                if (belowScale !== 1) {
+                                    belowImg.style.width = (belowScale * 100) + '%';
+                                }
+                                belowImg.addEventListener('error', function () {
+                                    console.warn('[row image failed to load]', belowImg.src);
+                                });
+                                belowImg.src = belowSrc;
+                                belowWrap.appendChild(belowImg);
+                                wrap.appendChild(belowWrap);
+
+                                // Keep the indent correct as the layout reflows
+                                if (typeof ResizeObserver === 'function') {
+                                    new ResizeObserver(alignBelow).observe(rowEl);
+                                }
+                            }
+
+                            extraImagesContainer.appendChild(wrap);
+                            requestAnimationFrame(alignBelow);
+                            return;
+                        }
+
+                        if (typeof item === 'object' && item !== null && item.caption) {
+                            const p = document.createElement('p');
+                            p.className = 'project-image-caption'
+                                + (item.align === 'left' ? ' project-image-caption--left' : '')
+                                + (item.tight ? ' project-image-caption--tight' : '');
+                            p.textContent = item.caption;
+                            if (item.link && item.link.href) {
+                                const a = document.createElement('a');
+                                a.className = 'project-caption-link';
+                                a.href = item.link.href;
+                                a.textContent = item.link.label || item.link.href;
+                                a.target = '_blank';
+                                a.rel = 'noopener noreferrer';
+                                p.appendChild(a);
+                            }
+                            extraImagesContainer.appendChild(p);
+                            return;
+                        }
+                        const img = document.createElement('img');
+                        if (typeof item === 'object' && item !== null && item.src) {
+                            img.src = item.src;
+                            var gap = (4 + (item.extraGap || 0)) + 'rem';
+                            if (item.scale && item.scale !== 1) {
+                                img.style.width = (item.scale * 100) + '%';
+                                img.style.maxWidth = 'none';
+                                img.classList.add('is-scaled');
+                                img.style.setProperty('--img-scale', item.scale);
+                                img.style.display = 'block';
+                                if (item.align === 'left') {
+                                    img.style.margin = '0 auto ' + gap + ' 0';
+                                } else if (item.align === 'right') {
+                                    img.style.margin = '0 0 ' + gap + ' auto';
+                                } else if (item.scale > 1) {
+                                    // Wider than the column: pull it out evenly on both sides
+                                    var bleed = ((item.scale - 1) / 2 * 100).toFixed(2) + '%';
+                                    img.style.margin = '0 -' + bleed + ' ' + gap + ' -' + bleed;
+                                } else {
+                                    img.style.margin = '0 auto ' + gap;
+                                }
+                            } else if (item.extraGap) {
+                                img.style.marginBottom = gap;
+                            }
+                        } else {
+                            img.src = item;
+                        }
+                        img.alt = data.title;
+                        extraImagesContainer.appendChild(img);
+                    });
+                }
+
+                // Populate project navigation grid (exclude current project)
+                const grid = document.getElementById('projectNavGrid');
+                grid.innerHTML = '';
+                const projectIds = Object.keys(PROJECT_DATA);
+                projectIds.forEach(function(id) {
+                    if (id === projectId) return;
+                    const proj = PROJECT_DATA[id];
+                    const thumb = document.createElement('div');
+                    thumb.className = 'project-nav-thumb';
+                    thumb.setAttribute('data-project', id);
+                    const img = document.createElement('img');
+                    img.src = proj.image;
+                    img.alt = proj.title;
+                    thumb.appendChild(img);
+                    thumb.addEventListener('click', function() {
+                        slideToProject(id);
+                    });
+                    grid.appendChild(thumb);
+                });
+            }
+
+            // Scroll transition between projects
+            function slideToProject(targetId) {
+                const data = PROJECT_DATA[targetId];
+                if (!data) return;
+
+                var viewportH = overlayContent.clientHeight;
+
+                // Build preview using exact same CSS classes as the real page
+                var nextPreview = document.createElement('div');
+                nextPreview.style.minHeight = viewportH + 'px';
+
+                // Title section — exact same structure as real overlay
+                var titleInner = document.createElement('div');
+                titleInner.className = 'overlay-inner';
+                var header = document.createElement('div');
+                header.className = 'overlay-header';
+                var title = document.createElement('h1');
+                title.className = 'project-title-large';
+                title.textContent = data.title;
+                var subtitle = document.createElement('p');
+                subtitle.className = 'project-subtitle';
+                subtitle.textContent = data.subtitle;
+                header.appendChild(title);
+                header.appendChild(subtitle);
+                titleInner.appendChild(header);
+                nextPreview.appendChild(titleInner);
+
+                // Hero image — same class, forced visible
+                var heroWrap = document.createElement('div');
+                heroWrap.className = 'overlay-hero-image';
+                heroWrap.style.opacity = '1';
+                heroWrap.style.animation = 'none';
+                var heroImg = document.createElement('img');
+                heroImg.src = data.image;
+                heroImg.alt = data.title;
+                heroWrap.appendChild(heroImg);
+                nextPreview.appendChild(heroWrap);
+
+                // Append preview at the bottom
+                overlayContent.appendChild(nextPreview);
+
+                // Scroll to the top of the preview (not the absolute bottom)
+                // so the title + start of hero are visible — matching scrollTop=0 of final page
+                var previewTop = nextPreview.offsetTop;
+                gsap.to(overlayContent, {
+                    scrollTop: previewTop,
+                    duration: 0.7,
+                    ease: 'power2.inOut',
+                    onComplete: function() {
+                        // 1. Populate real content while scrolled to bottom (invisible)
+                        populateOverlayContent(targetId);
+
+                        // 2. Force hero image visible (skip entrance animation)
+                        var realHero = document.querySelector('.overlay-hero-image');
+                        if (realHero) {
+                            realHero.style.opacity = '1';
+                            realHero.style.animation = 'none';
+                        }
+
+                        // 3. Snap to top — looks identical to preview, no visible change
+                        overlayContent.scrollTop = 0;
+
+                        // 4. Remove preview (now off-screen below)
+                        nextPreview.remove();
+
+                        // 5. Update URL
+                        history.pushState({ project: targetId }, data.title, '#' + targetId);
+                    }
+                });
+            }
+
+            window.openOverlay = function(projectId, clientX, clientY) {
+                const data = PROJECT_DATA[projectId];
+                if (!data) return;
+
+                lockScroll();
+                document.body.classList.add('overlay-open');
+                populateOverlayContent(projectId);
+
+                overlay.style.setProperty('--click-x', clientX + 'px');
+                overlay.style.setProperty('--click-y', clientY + 'px');
+                overlay.classList.add('active');
+
+                // Update URL for back/forward navigation (delayed to avoid repaint flash)
+                requestAnimationFrame(function() {
+                    history.pushState({ project: projectId }, data.title, '#' + projectId);
+                });
+
+                // Always reset scroll to top so the hero image is the first thing seen
+                const overlayContent = document.getElementById('overlayContent');
+                overlayContent.scrollTop = 0;
+            };
+
+            // Listen on every [data-project] element — excluding carousel items (handled by carousel script)
+            document.querySelectorAll('[data-project]').forEach(el => {
+                if (el.classList.contains('carousel-item')) return;
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.openOverlay(this.getAttribute('data-project'), e.clientX, e.clientY);
+                });
+            });
+
+            // Close overlay
+            let closeTimeout = null;
+
+            function closeOverlay(targetId = null, skipHistory) {
+                unlockScroll();
+
+                // Update URL back to base (unless triggered by popstate)
+                if (!skipHistory) {
+                    history.pushState({}, '', window.location.pathname);
+                }
+
+                // Remove overlay-open immediately so nav fades in alongside the slide animation
+                document.body.classList.remove('overlay-open', 'instant-open');
+
+                if (targetId) {
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const navHeight    = document.querySelector('nav').offsetHeight;
+                        const targetRect   = targetSection.getBoundingClientRect();
+                        const targetScrollY = window.pageYOffset + targetRect.top - navHeight - 20;
+                        window.scrollTo(0, targetScrollY);
+                    }
+                } else {
+                    window.scrollTo(0, savedScrollY);
+                }
+
+                overlay.classList.add('closing');
+                closeTimeout = setTimeout(() => {
+                    overlay.classList.remove('active', 'closing', 'instant');
+                    document.getElementById('overlayContent').style.clipPath = '';
+                    closeTimeout = null;
+                }, 600);
+            }
+
+            closeBtn.addEventListener('click', () => closeOverlay());
+
+            document.getElementById('overlayHomeLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                closeOverlay('#home');
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closeOverlay();
+            });
+
+            overlayNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeOverlay(this.getAttribute('href'));
+                });
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (overlay.classList.contains('active')) closeOverlay();
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) closeOverlay();
+            });
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(e) {
+                // Cancel any pending close timeout
+                if (closeTimeout) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = null;
+                }
+
+                if (e.state && e.state.project) {
+                    // Forward — instantly show the project
+                    const data = PROJECT_DATA[e.state.project];
+                    if (data) {
+                        // Clear any closing/animation state
+                        overlay.classList.remove('closing');
+                        overlay.style.transform = '';
+                        overlay.style.animation = 'none';
+
+                        lockScroll();
+                        document.body.classList.add('overlay-open');
+                        populateOverlayContent(e.state.project);
+                        overlay.classList.add('instant', 'active');
+                        document.getElementById('overlayContent').scrollTop = 0;
+
+                        // Restore animation ability after instant display
+                        requestAnimationFrame(function() {
+                            overlay.style.animation = '';
+                        });
+                    }
+                } else {
+                    // Back — instantly hide the overlay
+                    if (overlay.classList.contains('active')) {
+                        unlockScroll();
+                        document.body.classList.remove('overlay-open');
+                        overlay.classList.remove('active', 'closing', 'instant');
+                        overlay.style.transform = '';
+                        overlay.style.animation = 'none';
+                        document.getElementById('overlayContent').style.clipPath = '';
+                        window.scrollTo(0, savedScrollY);
+
+                        // Restore animation ability after instant hide
+                        requestAnimationFrame(function() {
+                            overlay.style.animation = '';
+                        });
+                    }
+                }
+            });
+
+            // Deep link: open project if URL has a hash on page load
+            (function() {
+                var hash = window.location.hash.replace('#', '');
+                if (hash && PROJECT_DATA[hash]) {
+                    // Small delay to let the page and loader finish
+                    setTimeout(function() {
+                        window.openOverlay(hash, window.innerWidth / 2, window.innerHeight / 2);
+                    }, 3000);
+                }
+            })();
+        });
+    </script>
+    <script>
+        // Carousel — clone items for seamless loop, drive scroll with rAF, pause on hover
+        (function() {
+            const track     = document.querySelector('.carousel-track');
+            const carousel  = document.querySelector('.hero-carousel');
+            const originals = Array.from(track.children);
+            const SPEED     = 0.8; // px per frame
+
+            // Clone originals and append for the seamless loop
+            originals.forEach(item => {
+                const clone = item.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                track.appendChild(clone);
+            });
+
+            let offset    = 0;
+            let loopWidth = 0;
+
+            function measure() {
+                // offsetLeft is relative to the track, not the viewport — reliable regardless of scroll/transform
+                const firstClone = track.children[originals.length];
+                loopWidth = firstClone.offsetLeft - originals[0].offsetLeft;
+            }
+
+            function tick() {
+                offset += SPEED;
+                if (offset >= loopWidth) offset -= loopWidth;
+                track.style.transform = `translateX(-${offset}px)`;
+                requestAnimationFrame(tick);
+            }
+
+            // Open overlay on click — reuses global openOverlay exposed by overlay system
+            carousel.addEventListener('click', function(e) {
+                const item = e.target.closest('.carousel-item[data-project]');
+                if (!item) return;
+
+                // Hold the colour panel down so it doesn't snap back when hover is lost
+                item.classList.add('clicked');
+                setTimeout(function() { item.classList.remove('clicked'); }, 1650);
+
+                if (typeof window.openOverlay === 'function') {
+                    window.openOverlay(item.getAttribute('data-project'), e.clientX, e.clientY);
+                }
+            });
+
+            // Peek effect — neighbours of hovered item slide up slightly
+            // Works on both originals and clones since they share the same classes
+            carousel.addEventListener('mouseover', function(e) {
+                const hovered = e.target.closest('.carousel-item');
+                if (!hovered) return;
+                const allItems = Array.from(track.querySelectorAll('.carousel-item'));
+                const idx = allItems.indexOf(hovered);
+                allItems.forEach((item, i) => {
+                    item.classList.remove('peek');
+                    if (i === idx - 1 || i === idx + 1) {
+                        item.classList.add('peek');
+                    }
+                });
+            });
+
+         
+            carousel.addEventListener('mouseleave', function() {
+                track.querySelectorAll('.carousel-item').forEach(item => item.classList.remove('peek'));
+            });
+
+            // Start carousel — called by the loader timeline, 0.4s before "GO!" finishes
+            var started = false;
+            function start() {
+                if (started) return;
+                started = true;
+                measure();
+                if (loopWidth > 0) {
+                    tick();
+                } else {
+                    setTimeout(function() { measure(); tick(); }, 200);
+                }
+            }
+            window.startCarousel = start;
+
+            window.addEventListener('load', function() {
+                // No loader on screen (deep link, or it already finished) — just go
+                if (!document.getElementById('loaderOverlay')) {
+                    start();
+                    return;
+                }
+                // Safety net in case the loader timeline never fires
+                setTimeout(start, 5000);
+            });
+        })();
+        /* ---------- Thumbnail hover flash-through ---------- */
+        (function () {
+            var FLASH_MS = 300;
+            var THUMB_TR = '?tr=w-1400,q-90';
+
+            function thumbUrl(url) { return url.split('?')[0] + THUMB_TR; }
+
+            // 1st, 2nd, 3rd, second-last and last images of a project
+            function framesFor(projectId) {
+                var data = (typeof PROJECT_DATA !== 'undefined') && PROJECT_DATA[projectId];
+                if (!data) return [];
+                // Explicit flash sequence wins if the project defines one
+                if (data.flashImages && data.flashImages.length > 1) {
+                    return data.flashImages.map(function (item) {
+                        if (typeof item === 'string') return { src: thumbUrl(item), scale: 1 };
+                        return { src: thumbUrl(item.src), scale: item.scale || 1 };
+                    });
+                }
+                if (!data.images) return [];
+                var imgs = data.images.filter(function (i) { return typeof i === 'string'; });
+                if (imgs.length < 2) return [];
+                var picks = [];
+                [0, 1, 2, imgs.length - 2, imgs.length - 1].forEach(function (i) {
+                    if (i >= 0 && i < imgs.length && picks.indexOf(imgs[i]) === -1) picks.push(imgs[i]);
+                });
+                return picks.map(function (u) { return { src: thumbUrl(u), scale: 1 }; });
+            }
+
+            // Main-page thumbnails only — carousel excluded
+            var boxes = document.querySelectorAll(
+                '.featured-image-box[data-project], .project-image-container[data-project]'
+            );
+
+            // Touch screens have no hover: a tap would start the cycle and
+            // nothing would ever stop it, so leave thumbnails static there
+            var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+            boxes.forEach(function (box) {
+                if (!canHover) return;
+                var img = box.querySelector('img');
+                if (!img) return;
+
+                var frames = framesFor(box.getAttribute('data-project'));
+                if (frames.length < 2) return;
+
+                var originalSrc = img.getAttribute('src');
+                var timer = null;
+                var preloaded = false;
+
+                function preload() {
+                    if (preloaded) return;
+                    preloaded = true;
+                    frames.forEach(function (f) { new Image().src = f.src; });
+                }
+
+                function show(f) {
+                    img.src = f.src;
+                    img.style.transform = f.scale === 1 ? '' : 'scale(' + f.scale + ')';
+                    img.style.objectFit = f.scale === 1 ? '' : 'contain';
+                }
+
+                function start() {
+                    preload();
+                    if (timer) clearInterval(timer);
+                    show(frames[0]);              // flip immediately, no initial wait
+                    var i = 1 % frames.length;
+                    timer = setInterval(function () {
+                        show(frames[i]);
+                        i = (i + 1) % frames.length;
+                    }, FLASH_MS);
+                }
+
+                function stop() {
+                    if (timer) { clearInterval(timer); timer = null; }
+                    img.src = originalSrc;
+                    img.style.transform = '';
+                    img.style.objectFit = '';
+                }
+
+                box.classList.add('flash-ready');
+                box.addEventListener('mouseenter', start);
+                box.addEventListener('mouseleave', stop);
+            });
+        })();
+
+        /* ---------- Mobile menu: tap to open / close ---------- */
+        (function () {
+            var container = document.querySelector('nav .menu-container');
+            if (!container) return;
+            var button = container.querySelector('.menu-button');
+            var isPhone = function () { return window.matchMedia('(max-width: 768px)').matches; };
+
+            button.setAttribute('aria-expanded', 'false');
+            function setOpen(open) {
+                container.classList.toggle('open', open);
+                button.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+
+            button.addEventListener('click', function (e) {
+                if (!isPhone()) return;          // desktop keeps its hover menu
+                e.stopPropagation();
+                setOpen(!container.classList.contains('open'));
+            });
+            container.querySelectorAll('.menu-items a').forEach(function (a) {
+                a.addEventListener('click', function () { setOpen(false); });
+            });
+            document.addEventListener('click', function (e) {
+                if (!container.contains(e.target)) setOpen(false);
+            });
+            window.addEventListener('resize', function () { if (!isPhone()) setOpen(false); });
+        })();
+
+        /* ---------- Services: on touch, the block at mid-screen shows its shape ---------- */
+        (function () {
+            if (!window.matchMedia('(hover: none)').matches) return;
+            var items = Array.prototype.slice.call(document.querySelectorAll('#services .service-item'));
+            if (!items.length) return;
+            var ticking = false;
+
+            function update() {
+                ticking = false;
+                var mid = window.innerHeight / 2;
+                var best = null, bestDist = Infinity;
+                items.forEach(function (el) {
+                    var r = el.getBoundingClientRect();
+                    // only blocks that actually sit across the middle of the screen
+                    if (r.top - 12 > mid || r.bottom + 12 < mid) return;
+                    var d = Math.abs((r.top + r.bottom) / 2 - mid);
+                    if (d < bestDist) { bestDist = d; best = el; }
+                });
+                // one at a time: everything else returns to its number
+                items.forEach(function (el) { el.classList.toggle('is-active', el === best); });
+            }
+
+            function request() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(update);
+            }
+
+            window.addEventListener('scroll', request, { passive: true });
+            window.addEventListener('resize', request);
+            update();
+        })();
+
+    </script>
+</body>
+</html>
